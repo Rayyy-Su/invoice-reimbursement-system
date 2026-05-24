@@ -267,12 +267,12 @@ class InvoiceLedger:
 
 def load_ledger() -> InvoiceLedger:
     if "ledger" not in st.session_state:
-        st.session_state.ledger = InvoiceLedger.load()
+        st.session_state.ledger = InvoiceLedger()
     return st.session_state.ledger
 
 
 def save_ledger() -> None:
-    st.session_state.ledger.save()
+    st.session_state.ledger = st.session_state.ledger
 
 
 def handle_error(action) -> bool:
@@ -286,7 +286,7 @@ def handle_error(action) -> bool:
 
 def render_sidebar(ledger: InvoiceLedger) -> None:
     st.sidebar.header("資料管理")
-    st.sidebar.caption(f"儲存檔案：`{DATA_FILE}`")
+    st.sidebar.caption("資料僅保存在目前瀏覽器工作階段，不會與其他裝置共用。")
 
     with st.sidebar.form("add_invoice_form", clear_on_submit=True):
         invoice_id = st.text_input("新增發票", placeholder="例如 INV-001")
@@ -331,13 +331,9 @@ def render_sidebar(ledger: InvoiceLedger) -> None:
             save_ledger()
             st.rerun()
 
-    if st.sidebar.button("儲存目前資料", width="stretch"):
-        save_ledger()
-        st.sidebar.success("已儲存")
-
     render_export_controls(ledger)
 
-    with st.sidebar.expander("JSON 原始資料"):
+    with st.sidebar.expander("目前工作階段資料"):
         st.json(ledger.to_json())
 
 

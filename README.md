@@ -25,7 +25,7 @@
 - 顯示各發票總金額佔比圓餅圖
 - 顯示各成員負擔費用佔比圓餅圖
 - 匯出 Excel 報表
-- 使用 JSON 儲存資料
+- 使用瀏覽器工作階段暫存資料，避免不同裝置共用紀錄
 
 ## 報表內容
 
@@ -63,7 +63,6 @@ python3 -m streamlit run DT.py
 ```text
 DT.py                  Streamlit 主程式
 requirements.txt       Python 套件需求
-invoice_ledger.json    本機資料檔
 ```
 
 ## 部署到 Streamlit Community Cloud
@@ -83,6 +82,8 @@ requirements.txt
 
 ## 資料安全提醒
 
-`invoice_ledger.json` 會保存目前輸入的發票、人員、金額、日期與備註資料。
+部署版本使用 Streamlit session state 保存目前工作階段資料。
 
-若資料包含真實報帳內容、個資或敏感資訊，不建議提交到公開 GitHub repository。建議將正式資料保存在私有環境，或改接雲端資料庫。
+不同瀏覽器或不同裝置不會共用同一份紀錄；但重新整理、關閉頁面、雲端 App 休眠或重啟後，工作階段資料可能消失。請在送審前下載 Excel 報表留存。
+
+若未來需要長期保存、多人協作或主管/會計審核流程，建議改接雲端資料庫。
